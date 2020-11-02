@@ -2,13 +2,13 @@ using System;
 
 namespace MenuSystem
 {
-    public class MenuItem: Object
+    public sealed class MenuItem: Object
     {
-        public virtual string Label { get; set; }
-        public virtual string UserChoice { get; set; }
-        public virtual Action MethodToExecute { get; set; }
+        public string Label { get; set; }
+        public string UserChoice { get; set; }
+        public Func<string> MethodToExecute { get; set; }
 
-        public MenuItem(string label, string userChoice, Action methodToExecute )
+        public MenuItem(string label, string userChoice, Func<string> methodToExecute )
 
         {
             Label = label;

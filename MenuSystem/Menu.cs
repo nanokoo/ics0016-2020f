@@ -12,17 +12,34 @@ namespace MenuSystem
     }
     public class Menu
     {
-        public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
+        //public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
+        public Dictionary<string, MenuItem>MenuItems { get; set; } = new Dictionary<string, MenuItem>();
         private readonly MenuLevel _menuLevel;
+        private readonly string[] _reservedActions = {"x", "m", "r"};
 
         public Menu(MenuLevel level)
         {
             _menuLevel = level;
         }
 
-        public void RunMenu()
+        public void AddMenuItem(MenuItem item)
         {
-            var userChoice = "";
+            if (item.UserChoice == "")
+            {
+                throw new ArgumentException("nah... 😏 empty string ");
+            }
+
+            if (_reservedActions.Contains(item.UserChoice.ToLower()))
+            {
+                throw new ArgumentException("reserved choice ⛔️");
+                
+            }
+            MenuItems.Add(item.UserChoice.ToLower(), item);
+        }
+
+        public string RunMenu()
+        {
+            string userChoice;
             do
             {
                 Console.WriteLine("");
@@ -42,8 +59,8 @@ namespace MenuSystem
                         Console.WriteLine("X) exit game");
                         break;
                     case MenuLevel.Level2plus:
-                        Console.WriteLine("P) return to previous");
-                        Console.WriteLine("R) return to main");
+                        Console.WriteLine("R) return to previous");
+                        Console.WriteLine("M) return to main");
                         Console.WriteLine("X) exit game");
                         break;
                     default:
@@ -53,24 +70,38 @@ namespace MenuSystem
                 Console.WriteLine(">");
 
                 userChoice = Console.ReadLine()?.ToLower().Trim() ?? "";
+                if (!_reservedActions.Contains(userChoice))
+                {
+                    if (MenuItems.TryGetValue(userChoice, out var userMenuItem))
+                    {
+                        userChoice = userMenuItem.MethodToExecute();
+                    }
+                    else
+                    {
+                        Console.WriteLine("NO option");
+                    }
+                    
+                }
                 if (userChoice == "x")
                 {
+                    if (_menuLevel != MenuLevel.Level0) continue;
                     Console.WriteLine("game quit");
                     break;
-                }
 
-                var userMenuItem = MenuItems.FirstOrDefault(t => t.UserChoice == userChoice);
-                if (userMenuItem != null)
-                {
-                    userMenuItem.MethodToExecute();
                 }
-                else
+                if (userChoice == "m"&& _menuLevel != MenuLevel.Level0)
                 {
-                    Console.WriteLine("I don't have this option!");
+                    break;
                 }
+                if (userChoice == "r" && _menuLevel != MenuLevel.Level2plus)
+                {
+                    userChoice = null;
+                    break;
+                }
+                //Console.WriteLine(userMenuItem != null ? "not impelemted yet" : "I don't have this option!");
+            } while (true);
 
-                    //Console.WriteLine(userMenuItem != null ? "not impelemted yet" : "I don't have this option!");
-            } while (userChoice != "x");
+            return userChoice!;
         }
     }
 }

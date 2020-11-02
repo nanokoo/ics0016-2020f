@@ -1,36 +1,29 @@
 ﻿using System;
 using MenuSystem;
 
-
-namespace ConsoleApp01
+namespace consoleApp007
 {
     internal static class Program
     {
         private static void Main()
         {
             Console.WriteLine("====menu====");
-            var menuB =new  Menu(MenuLevel.Level2plus);
-            menuB.MenuItems.Add(new MenuItem("Sub 2", "1", DefaultMenuAction));
-            var menuA=new  Menu(MenuLevel.Level1);
-            menuA.MenuItems.Add(new MenuItem("go to Submenu 2", "1", menuB.RunMenu));
+            var menuB = new Menu(MenuLevel.Level2plus);
+            menuB.AddMenuItem(new MenuItem("Sub 2", "1", DefaultMenuAction));
+            var menuA = new Menu(MenuLevel.Level1);
+            menuA.AddMenuItem(new MenuItem("go to Submenu 2", "1", menuB.RunMenu));
             var menu = new Menu(MenuLevel.Level0);
-            menu.MenuItems.Add(new MenuItem("go to submenu 1","s",  menuA.RunMenu ));
-            menu.MenuItems.Add(new MenuItem("new game vs human","2", DefaultMenuAction));
-            menu.MenuItems.Add(new MenuItem("New game ai vs ai","3", DefaultMenuAction));
-            menu.RunMenu();
-      
+            menu.AddMenuItem(new MenuItem("go to submenu 1", "s", menuA.RunMenu));
+            menu.AddMenuItem(new MenuItem("new game vs human", "2", DefaultMenuAction));
+            menu.AddMenuItem(new MenuItem("New game ai vs ai", "3", DefaultMenuAction));
 
-            //Console.WriteLine("dfgdg " + i);
+            menu.RunMenu();
         }
-        // how to create the method sample:
-        static void DefaultMenuAction()
+
+        private static string DefaultMenuAction()
         {
             Console.WriteLine("NOT IMPLEMENTED YET!");
-        }
-
-        private static void Output(int i)
-        {
-            Console.WriteLine($"I is {i}");
+            return "";
         }
     }
 }
